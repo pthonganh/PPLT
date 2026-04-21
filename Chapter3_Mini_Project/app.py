@@ -89,7 +89,31 @@ def display_menu():
     print("===== FAMILY LIBRARY MANAGEMENT =====")
     print("1. Add book")
     print("2. Display books")
+    print("3. Search book")
     print("0. Exit")
+
+def search_book(books):
+    if not books:
+        print("No books found.")
+        return
+
+    keyword = input("Enter book ID to search: ").strip()
+
+    for b in books:
+        if b["id"] == keyword:
+            print("Book found:")
+            print("{:<5} {:<12} {:<12} {:<6} {:<5} {:<10} {:<10}".format(
+                "ID", "Title", "Author", "Year", "Qty", "Category", "Status"
+            ))
+            print("-" * 65)
+            print("{:<5} {:<12} {:<12} {:<6} {:<5} {:<10} {:<10}".format(
+                b["id"], b["title"], b["author"],
+                b["year"], b["quantity"],
+                b["category"], b["status"]
+            ))
+            return
+
+    print("Book not found.")
 
 def main():
     file = "Chapter3_Mini_Project/books.txt"
@@ -104,6 +128,9 @@ def main():
 
         elif choice == "2":
             display_books(books)
+
+        elif choice == "3":
+            search_book(books)
 
         elif choice == "0":
             save_data(file, books)
