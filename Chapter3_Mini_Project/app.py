@@ -85,13 +85,6 @@ def display_books(books):
         ))
 
 
-def display_menu():
-    print("===== FAMILY LIBRARY MANAGEMENT =====")
-    print("1. Add book")
-    print("2. Display books")
-    print("3. Search book")
-    print("0. Exit")
-
 def search_book(books):
     if not books:
         print("No books found.")
@@ -115,6 +108,31 @@ def search_book(books):
 
     print("Book not found.")
 
+def sort_books(books):
+    books.sort(key=lambda x: x["year"])
+    print("Sorted by year!")
+
+def statistics(books):
+    if not books:
+        print("No data.")
+        return
+
+    total = len(books)
+    total_qty = sum(b["quantity"] for b in books)
+
+    print("--- STATISTICS ---")
+    print("Total titles:", total)
+    print("Total quantity:", total_qty)
+
+def display_menu():
+    print("===== FAMILY LIBRARY MANAGEMENT =====")
+    print("1. Add book")
+    print("2. Display books")
+    print("3. Search book")
+    print("4. Sort books")
+    print("5. Statistics")
+    print("0. Exit")
+
 def main():
     file = "Chapter3_Mini_Project/books.txt"
     books = load_data(file)
@@ -131,6 +149,12 @@ def main():
 
         elif choice == "3":
             search_book(books)
+
+        elif choice == "4":
+            sort_books(books)
+
+        elif choice == "5":
+            statistics(books)
 
         elif choice == "0":
             save_data(file, books)
