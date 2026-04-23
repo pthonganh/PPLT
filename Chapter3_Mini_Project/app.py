@@ -65,24 +65,46 @@ def add_book(books):
 
 def display_books(books):
     if not books:
-        print("No books found.")
+        print("\nNo books found.")
         return
 
-    print("\n{:<6} {:<15} {:<15} {:<8} {:<6} {:<12} {:<10}".format(
-        "ID", "Title", "Author", "Year", "Qty", "Category", "Status"
-    ))
-    print("-" * 75)
+    headers = ["ID", "Title", "Author", "Year", "Qty", "Category", "Status"]
 
+    rows = []
     for b in books:
-        print("{:<6} {:<15} {:<15} {:<8} {:<6} {:<12} {:<10}".format(
-            b["id"],
-            b["title"],
-            b["author"],
-            b["year"],
-            b["quantity"],
-            b["category"],
-            b["status"]
-        ))
+        rows.append([
+            str(b["id"]),
+            str(b["title"]),
+            str(b["author"]),
+            str(b["year"]),
+            str(b["quantity"]),
+            str(b["category"]),
+            str(b["status"])
+        ])
+
+    col_widths = []
+    for i in range(len(headers)):
+        max_width = len(headers[i])
+        for row in rows:
+            if len(row[i]) > max_width:
+                max_width = len(row[i])
+        col_widths.append(max_width)
+
+    def print_border():
+        print("+" + "+".join("-" * (w + 2) for w in col_widths) + "+")
+
+    def print_row(row):
+        print("| " + " | ".join(row[i].ljust(col_widths[i]) for i in range(len(row))) + " |")
+
+    print()
+    print_border()
+    print_row(headers)
+    print_border()
+
+    for row in rows:
+        print_row(row)
+
+    print_border()
 
 
 def search_book(books):
