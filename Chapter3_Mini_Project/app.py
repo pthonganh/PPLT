@@ -65,7 +65,7 @@ def add_book(books):
 
 def display_books(books):
     if not books:
-        print("\nNo books found.")
+        print("No books found.")
         return
 
     headers = ["ID", "Title", "Author", "Year", "Qty", "Category", "Status"]
@@ -112,23 +112,55 @@ def search_book(books):
         print("No books found.")
         return
 
-    keyword = input("Enter book ID to search: ").strip()
+    print("--- SEARCH OPTIONS ---")
+    print("1. Search by ID")
+    print("2. Search by Title keyword")
+    print("3. Search by Year")
+    print("4. Search by Author")
+    print("5. Search by Category")
 
-    for b in books:
-        if b["id"] == keyword:
-            print("Book found:")
-            print("{:<5} {:<12} {:<12} {:<6} {:<5} {:<10} {:<10}".format(
-                "ID", "Title", "Author", "Year", "Qty", "Category", "Status"
-            ))
-            print("-" * 65)
-            print("{:<5} {:<12} {:<12} {:<6} {:<5} {:<10} {:<10}".format(
-                b["id"], b["title"], b["author"],
-                b["year"], b["quantity"],
-                b["category"], b["status"]
-            ))
-            return
+    choice = input("Choose: ").strip()
+    results = []
 
-    print("Book not found.")
+    if choice == "1":
+        keyword = input("Enter book ID: ").strip().lower()
+        for b in books:
+            if str(b["id"]).lower() == keyword:
+                results.append(b)
+
+    elif choice == "2":
+        keyword = input("Enter title keyword: ").strip().lower()
+        for b in books:
+            if keyword in str(b["title"]).lower():
+                results.append(b)
+
+    elif choice == "3":
+        year = input("Enter year: ").strip()
+        for b in books:
+            if str(b["year"]) == year:
+                results.append(b)
+
+    elif choice == "4":
+        keyword = input("Enter author name: ").strip().lower()
+        for b in books:
+            if keyword in str(b["author"]).lower():
+                results.append(b)
+
+    elif choice == "5":
+        keyword = input("Enter category: ").strip().lower()
+        for b in books:
+            if keyword in str(b["category"]).lower():
+                results.append(b)
+
+    else:
+        print("Invalid choice!")
+        return
+
+    if results:
+        print("Search results:")
+        display_books(results)
+    else:
+        print("No matching books found.")
 
 def sort_books(books):
     if not books:
