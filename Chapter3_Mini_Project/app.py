@@ -131,8 +131,35 @@ def search_book(books):
     print("Book not found.")
 
 def sort_books(books):
-    books.sort(key=lambda x: x["year"])
-    print("Sorted by year!")
+    if not books:
+        print("No books to sort.")
+        return
+
+    print("--- SORT OPTIONS ---")
+    print("1. Sort by Title (A-Z)")
+    print("2. Sort by Year")
+    print("3. Sort by Quantity")
+
+    choice = input("Choose: ")
+
+    if choice == "1":
+        books.sort(key=lambda x: x["title"].lower())
+        print("Sorted by Title (A-Z)")
+
+    elif choice == "2":
+        books.sort(key=lambda x: x["year"])
+        print("Sorted by Year")
+
+    elif choice == "3":
+        books.sort(key=lambda x: x["quantity"])
+        print("Sorted by Quantity")
+
+    else:
+        print("Invalid choice!")
+        return
+    
+    display_books(books)
+
 
 def statistics(books):
     if not books:
