@@ -1,4 +1,5 @@
 import os
+import json
 
 def load_data(filename):
     books = []
@@ -205,6 +206,21 @@ def statistics(books):
     print("Total titles:", total)
     print("Total quantity:", total_qty)
 
+def export_json(books):
+    with open("books.json", "w", encoding="utf-8") as f:
+        json.dump(books, f, indent=4)
+    print("Exported to books.json")
+
+def import_json():
+    try:
+        with open("books.json", "r", encoding="utf-8") as f:
+            books = json.load(f)
+        print("Loaded from books.json")
+        return books
+    except:
+        print("No JSON file found.")
+        return []
+
 def display_menu():
     print("===== FAMILY LIBRARY MANAGEMENT =====")
     print("1. Add book")
@@ -212,10 +228,12 @@ def display_menu():
     print("3. Search book")
     print("4. Sort books")
     print("5. Statistics")
+    print("6. Export to JSON")
+    print("7. Load from JSON")
     print("0. Exit")
 
 def main():
-    file = "Chapter3_Mini_Project/books.txt"
+    file = "books.txt"
     books = load_data(file)
 
     while True:
@@ -237,6 +255,12 @@ def main():
         elif choice == "5":
             statistics(books)
 
+        elif choice == "6":
+            export_json(books)
+
+        elif choice == "7":
+            books = import_json()
+            display_books(books)
         elif choice == "0":
             save_data(file, books)
             print("Saved. Exit.")

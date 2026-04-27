@@ -1,0 +1,47 @@
+[
+    {
+        "id": "001",
+        "title": "hui",
+        "author": "Jui",
+        "year": 2019,
+        "quantity": 1,
+        "category": "Comic",
+        "status": "Available"
+    },
+    {
+        "id": "002",
+        "title": "kdhyf",
+        "author": "jsdgf",
+        "year": 2029,
+        "quantity": 2,
+        "category": "dgfy",
+        "status": "agst"
+    },
+    {
+        "id": "008\\",
+        "title": "shdgf",
+        "author": "shdgf",
+        "year": 2018,
+        "quantity": 3,
+        "category": "jdnshvg",
+        "status": "Avai"
+    },
+    {
+        "id": "009",
+        "title": "d\u00ech",
+        "author": "sidfyg",
+        "year": 2098,
+        "quantity": 1,
+        "category": "njsdf",
+        "status": "kjdhfyg"
+    },
+    {
+        "id": "002",
+        "title": "sdf",
+        "author": "jsdhfg",
+        "year": 2028,
+        "quantity": 2,
+        "category": "sduf",
+        "status": "sdhygf"
+    }
+]
