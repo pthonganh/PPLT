@@ -208,7 +208,7 @@ def statistics(books):
 
 def export_json(books):
     with open("books.json", "w", encoding="utf-8") as f:
-        json.dump(books, f, indent=4)
+        json.dump(books, f, indent=4, ensure_ascii=False)  
     print("Exported to books.json")
 
 def import_json():
