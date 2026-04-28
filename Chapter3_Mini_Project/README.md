@@ -197,6 +197,15 @@ Calculates:
 ---
 
 ## 11. How to Run
+Step 1: Open Project Folder
+
+Open the folder Chapter3_Mini_Project in VS Code.
+
+Step 2: Open Terminal or CMD
+
+Make sure you are inside the project folder.
+
+Step 3: Run the Program
 ```bash
 python app.py
 ```
@@ -254,6 +263,8 @@ Course: Programming Methods 1
 ---
 
 ## 15. Conclusion
-The project satisfies all requirements: CLI menu, validation, file handling, search, sort, statistics, and JSON features.
+This project satisfies the requirements of the mini project.
 
-The program is structured using procedural programming, making it clear, modular, and easy to maintain.
+It uses a CLI menu, functions, loops, conditional statements, input validation, TXT file handling, JSON file handling, searching, sorting, and statistics.
+
+The program is organized using procedural programming, making it clear, modular, and easy to understand.
