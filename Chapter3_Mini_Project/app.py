@@ -261,6 +261,7 @@ def main():
         elif choice == "7":
             books = import_json()
             display_books(books)
+        
         elif choice == "0":
             save_data(file, books)
             print("Saved. Exit.")

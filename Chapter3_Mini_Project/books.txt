@@ -1,5 +1,2 @@
-001|hui|Jui|2019|1|Comic|Available
-002|kdhyf|jsdgf|2029|2|dgfy|agst
-008\|shdgf|shdgf|2018|3|jdnshvg|Avai
-009|dìh|sidfyg|2098|1|njsdf|kjdhfyg
-002|sdf|jsdhfg|2028|2|sduf|sdhygf
+001|Hoàng tử bé|Antoine|1943|2|family|Available
+007|Trốn lên mái nhà để khóc|lam|2019|1|Family|Borrowed
