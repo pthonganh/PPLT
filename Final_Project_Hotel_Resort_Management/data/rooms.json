@@ -1,1 +1,9 @@
-[]
+[
+    {
+        "room_id": "01",
+        "price": 200.0,
+        "capacity": 2,
+        "status": "Available",
+        "room_type": "VIP"
+    }
+]

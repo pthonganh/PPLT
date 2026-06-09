@@ -1,0 +1,272 @@
+from models.standard_room import StandardRoom
+from models.vip_room import VIPRoom
+from models.villa_room import VillaRoom
+from models.customer import Customer
+
+
+class MenuView:
+
+    def __init__(
+        self,
+        room_service,
+        customer_service,
+        booking_service
+    ):
+        self.room_service = room_service
+        self.customer_service = customer_service
+        self.booking_service = booking_service
+
+    def run(self):
+
+        while True:
+
+            print("========== HOTEL RESORT MANAGEMENT ==========")
+            print("1. Room Management")
+            print("2. Customer Management")
+            print("3. Booking Management")
+            print("4. Reports")
+            print("0. Exit")
+
+            choice = input("Choose: ")
+
+            if choice == "1":
+                self.room_menu()
+
+            elif choice == "2":
+                self.customer_menu()
+
+            elif choice == "3":
+                print("Booking Menu - Coming Soon")
+
+            elif choice == "4":
+                print("Report Menu - Coming Soon")
+
+            elif choice == "0":
+
+                self.room_service.save_data()
+                self.customer_service.save_data()
+                self.booking_service.save_data()
+
+                print("Data saved successfully!")
+                print("Goodbye!")
+
+                break
+
+            else:
+                print("Invalid choice!")
+
+    # ==================================
+    # ROOM MENU
+    # ==================================
+
+    def room_menu(self):
+
+        while True:
+
+            print("========== ROOM MANAGEMENT ==========")
+            print("1. Add Room")
+            print("2. View Rooms")
+            print("3. Delete Room")
+            print("0. Back")
+
+            choice = input("Choose: ")
+
+            if choice == "1":
+                self.add_room()
+
+            elif choice == "2":
+                self.view_rooms()
+
+            elif choice == "3":
+                self.delete_room()
+
+            elif choice == "0":
+                break
+
+            else:
+                print("Invalid choice!")
+
+    def add_room(self):
+
+        try:
+
+            room_id = input("Room ID: ")
+
+            room_type = input(
+                "Type (Standard/VIP/Villa): "
+            )
+
+            price = float(
+                input("Price per day: ")
+            )
+
+            capacity = int(
+                input("Capacity: ")
+            )
+
+            if room_type.lower() == "standard":
+
+                room = StandardRoom(
+                    room_id,
+                    price,
+                    capacity
+                )
+
+            elif room_type.lower() == "vip":
+
+                room = VIPRoom(
+                    room_id,
+                    price,
+                    capacity
+                )
+
+            elif room_type.lower() == "villa":
+
+                room = VillaRoom(
+                    room_id,
+                    price,
+                    capacity
+                )
+
+            else:
+
+                print("Invalid room type!")
+                return
+
+            self.room_service.add_room(room)
+
+            print("Room added successfully!")
+
+        except Exception as e:
+
+            print("Error:", e)
+
+    def view_rooms(self):
+
+        rooms = self.room_service.get_all_rooms()
+
+        if len(rooms) == 0:
+
+            print("No rooms found.")
+            return
+
+        print("========== ROOM LIST ==========")
+
+        for room in rooms:
+
+            print(
+                f"{room.room_id} | "
+                f"{room.get_room_type()} | "
+                f"{room.price} | "
+                f"{room.capacity} | "
+                f"{room.status}"
+            )
+
+    def delete_room(self):
+
+        room_id = input("Enter Room ID: ")
+
+        if self.room_service.delete_room(room_id):
+
+            print("Deleted successfully!")
+
+        else:
+
+            print("Room not found!")
+
+    # ==================================
+    # CUSTOMER MENU
+    # ==================================
+
+    def customer_menu(self):
+
+        while True:
+
+            print("========== CUSTOMER MANAGEMENT ==========")
+            print("1. Add Customer")
+            print("2. View Customers")
+            print("3. Delete Customer")
+            print("0. Back")
+
+            choice = input("Choose: ")
+
+            if choice == "1":
+                self.add_customer()
+
+            elif choice == "2":
+                self.view_customers()
+
+            elif choice == "3":
+                self.delete_customer()
+
+            elif choice == "0":
+                break
+
+            else:
+                print("Invalid choice!")
+
+    def add_customer(self):
+
+        try:
+
+            customer_id = input("Customer ID: ")
+            name = input("Name: ")
+            phone = input("Phone: ")
+            email = input("Email: ")
+
+            customer = Customer(
+                customer_id,
+                name,
+                phone,
+                email
+            )
+
+            self.customer_service.add_customer(
+                customer
+            )
+
+            print("Customer added successfully!")
+
+        except Exception as e:
+
+            print("Error:", e)
+
+    def view_customers(self):
+
+        customers = self.customer_service.get_all_customers()
+
+        if len(customers) == 0:
+
+            print("No customers found.")
+            return
+
+        print("========== CUSTOMER LIST ==========")
+
+        for customer in customers:
+
+            print(
+                f"{customer.customer_id} | "
+                f"{customer.name} | "
+                f"{customer.phone} | "
+                f"{customer.email}"
+            )
+
+    def delete_customer(self):
+
+        customer_id = input(
+            "Enter Customer ID: "
+        )
+
+        if self.customer_service.delete_customer(
+            customer_id
+        ):
+
+            print(
+                "Deleted successfully!"
+            )
+
+        else:
+
+            print(
+                "Customer not found!"
+            )
