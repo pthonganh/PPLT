@@ -25,7 +25,8 @@ def main():
     menu = MenuView(
         room_service,
         customer_service,
-        booking_service
+        booking_service,
+        report_service
     )
 
     menu.report_service = report_service

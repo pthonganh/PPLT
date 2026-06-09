@@ -10,11 +10,13 @@ class MenuView:
         self,
         room_service,
         customer_service,
-        booking_service
+        booking_service,
+        report_service
     ):
         self.room_service = room_service
         self.customer_service = customer_service
         self.booking_service = booking_service
+        self.report_service = report_service
 
     def run(self):
 
@@ -39,7 +41,7 @@ class MenuView:
                 self.booking_menu()
 
             elif choice == "4":
-                print("Report Menu - Coming Soon")
+                self.report_menu()
 
             elif choice == "0":
 
@@ -504,3 +506,95 @@ class MenuView:
             print(
                 "Booking not found!"
             )
+
+    # ==================================
+    # REPORT MENU
+    # ==================================
+
+    def report_menu(self):
+
+        while True:
+
+            print("========== REPORTS ==========")
+            print("1. Total Revenue")
+            print("2. Available Rooms")
+            print("3. Booked Rooms")
+            print("4. Export Booking CSV")
+            print("0. Back")
+
+            choice = input("Choose: ")
+
+            if choice == "1":
+                self.show_revenue()
+
+            elif choice == "2":
+                self.show_available_rooms()
+
+            elif choice == "3":
+                self.show_booked_rooms()
+
+            elif choice == "4":
+                self.export_csv()
+
+            elif choice == "0":
+                break
+
+            else:
+                print("Invalid choice!")
+
+    def show_revenue(self):
+
+        revenue = (
+            self.report_service
+            .get_total_revenue()
+        )
+
+        print(
+            f"Total Revenue: {revenue}"
+        )
+
+    def show_available_rooms(self):
+
+        rooms = (
+            self.report_service
+            .get_available_rooms()
+        )
+
+        print(
+            "===== AVAILABLE ROOMS ====="
+        )
+
+        for room in rooms:
+
+            print(
+                f"{room.room_id} | "
+                f"{room.get_room_type()} | "
+                f"{room.price}"
+            )
+
+    def show_booked_rooms(self):
+
+        rooms = (
+            self.report_service
+            .get_booked_rooms()
+        )
+
+        print(
+            "===== BOOKED ROOMS ====="
+        )
+
+        for room in rooms:
+
+            print(
+                f"{room.room_id} | "
+                f"{room.get_room_type()} | "
+                f"{room.price}"
+            )
+
+    def export_csv(self):
+
+        self.report_service.export_bookings_csv()
+
+        print(
+            "booking_report.csv exported successfully!"
+        )
