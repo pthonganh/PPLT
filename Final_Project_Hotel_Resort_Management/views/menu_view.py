@@ -36,7 +36,7 @@ class MenuView:
                 self.customer_menu()
 
             elif choice == "3":
-                print("Booking Menu - Coming Soon")
+                self.booking_menu()
 
             elif choice == "4":
                 print("Report Menu - Coming Soon")
@@ -269,4 +269,118 @@ class MenuView:
 
             print(
                 "Customer not found!"
+            )
+    # ==================================
+    # BOOKING MENU
+    # ==================================
+
+    def booking_menu(self):
+
+        while True:
+
+            print("\n========== BOOKING MANAGEMENT ==========")
+            print("1. Create Booking")
+            print("2. View Bookings")
+            print("3. Cancel Booking")
+            print("0. Back")
+
+            choice = input("Choose: ")
+
+            if choice == "1":
+                self.create_booking()
+
+            elif choice == "2":
+                self.view_bookings()
+
+            elif choice == "3":
+                self.cancel_booking()
+
+            elif choice == "0":
+                break
+
+            else:
+                print("Invalid choice!")
+
+    def create_booking(self):
+
+        try:
+
+            booking_id = input("Booking ID: ")
+
+            customer_id = input(
+                "Customer ID: "
+            )
+
+            room_id = input(
+                "Room ID: "
+            )
+
+            check_in = input(
+                "Check In (YYYY-MM-DD): "
+            )
+
+            check_out = input(
+                "Check Out (YYYY-MM-DD): "
+            )
+
+            booking = self.booking_service.create_booking(
+                booking_id,
+                customer_id,
+                room_id,
+                check_in,
+                check_out
+            )
+
+            print(
+                "Booking created successfully!"
+            )
+
+            print(
+                "Total Price: {booking.total_price}"
+            )
+
+        except Exception as e:
+
+            print("Error:", e)
+
+    def view_bookings(self):
+
+        bookings = self.booking_service.get_all_bookings()
+
+        if len(bookings) == 0:
+
+            print("No bookings found.")
+            return
+
+        print("========== BOOKING LIST ==========")
+
+        for booking in bookings:
+
+            print(
+                f"{booking.booking_id} | "
+                f"{booking.customer_id} | "
+                f"{booking.room_id} | "
+                f"{booking.check_in} | "
+                f"{booking.check_out} | "
+                f"{booking.total_price}"
+            )
+
+    def cancel_booking(self):
+
+        booking_id = input(
+            "Booking ID: "
+        )
+
+        if self.booking_service.cancel_booking(
+            booking_id
+        ):
+
+            print(
+                "Booking cancelled!"
+            )
+
+        else:
+
+            print(
+                "Booking not found!"
             )
