@@ -66,7 +66,11 @@ class MenuView:
             print("========== ROOM MANAGEMENT ==========")
             print("1. Add Room")
             print("2. View Rooms")
-            print("3. Delete Room")
+            print("3. Update Room")
+            print("4. Delete Room")
+            print("5. Search Room")
+            print("6. Sort Price Asc")
+            print("7. Sort Price Desc")
             print("0. Back")
 
             choice = input("Choose: ")
@@ -78,7 +82,19 @@ class MenuView:
                 self.view_rooms()
 
             elif choice == "3":
+                self.update_room()
+
+            elif choice == "4":
                 self.delete_room()
+
+            elif choice == "5":
+                self.search_room()
+
+            elif choice == "6":
+                self.sort_room_asc()
+
+            elif choice == "7":
+                self.sort_room_desc()
 
             elif choice == "0":
                 break
@@ -174,7 +190,60 @@ class MenuView:
 
             print("Room not found!")
 
-    # ==================================
+    def update_room(self):
+
+        room_id = input("Room ID: ")
+
+        price = float(input("New Price: "))
+        capacity = int(input("New Capacity: "))
+
+        if self.room_service.update_room(
+            room_id,
+            price,
+            capacity
+        ):
+            print("Updated successfully!")
+        else:
+            print("Room not found!")
+
+    def search_room(self):
+
+        keyword = input("Keyword: ")
+
+        rooms = self.room_service.search_room(
+            keyword
+        )
+
+        for room in rooms:
+
+            print(
+                f"{room.room_id} | "
+                f"{room.get_room_type()} | "
+                f"{room.price}"
+            )
+
+    def sort_room_asc(self):
+
+        rooms = self.room_service.sort_by_price_ascending()
+
+        for room in rooms:
+
+            print(
+                f"{room.room_id} | "
+                f"{room.price}"
+            )
+
+    def sort_room_desc(self):
+
+        rooms = self.room_service.sort_by_price_descending()
+
+        for room in rooms:
+
+            print(
+                f"{room.room_id} | "
+                f"{room.price}"
+            )
+        # ==================================
     # CUSTOMER MENU
     # ==================================
 
@@ -185,7 +254,9 @@ class MenuView:
             print("========== CUSTOMER MANAGEMENT ==========")
             print("1. Add Customer")
             print("2. View Customers")
-            print("3. Delete Customer")
+            print("3. Update Customer")
+            print("4. Delete Customer")
+            print("5. Search Customer")
             print("0. Back")
 
             choice = input("Choose: ")
@@ -197,7 +268,13 @@ class MenuView:
                 self.view_customers()
 
             elif choice == "3":
+                self.update_customer()
+
+            elif choice == "4":
                 self.delete_customer()
+
+            elif choice == "5":
+                self.search_customer()
 
             elif choice == "0":
                 break
@@ -270,6 +347,49 @@ class MenuView:
             print(
                 "Customer not found!"
             )
+
+    def update_customer(self):
+
+        customer_id = input(
+            "Customer ID: "
+        )
+
+        name = input("New Name: ")
+        phone = input("New Phone: ")
+        email = input("New Email: ")
+
+        if self.customer_service.update_customer(
+            customer_id,
+            name,
+            phone,
+            email
+        ):
+            print("Updated successfully!")
+        else:
+            print("Customer not found!")
+
+    def search_customer(self):
+
+        keyword = input(
+            "Customer Name: "
+        )
+
+        customers = (
+            self.customer_service
+            .search_customer_by_name(
+                keyword
+            )
+        )
+
+        for customer in customers:
+
+            print(
+                f"{customer.customer_id} | "
+                f"{customer.name} | "
+                f"{customer.phone}"
+            )
+
+    
     # ==================================
     # BOOKING MENU
     # ==================================
@@ -278,7 +398,7 @@ class MenuView:
 
         while True:
 
-            print("\n========== BOOKING MANAGEMENT ==========")
+            print("========== BOOKING MANAGEMENT ==========")
             print("1. Create Booking")
             print("2. View Bookings")
             print("3. Cancel Booking")
@@ -336,7 +456,7 @@ class MenuView:
             )
 
             print(
-                "Total Price: {booking.total_price}"
+                f"Total Price: {booking.total_price}"
             )
 
         except Exception as e:
