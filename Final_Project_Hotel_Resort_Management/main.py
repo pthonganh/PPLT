@@ -9,7 +9,6 @@ from views.menu_view import MenuView
 def main():
 
     room_service = RoomService()
-
     customer_service = CustomerService()
 
     booking_service = BookingService(
@@ -28,8 +27,6 @@ def main():
         booking_service,
         report_service
     )
-
-    menu.report_service = report_service
 
     menu.run()
 
