@@ -2,9 +2,9 @@ class Customer:
 
     def __init__(self, customer_id, name, phone, email):
         self.__customer_id = customer_id
-        self.__name = name
-        self.__phone = phone
-        self.__email = email
+        self.name = name
+        self.phone = phone
+        self.email = email
 
     @property
     def customer_id(self):
@@ -26,6 +26,8 @@ class Customer:
 
     @phone.setter
     def phone(self, value):
+        if not value.isdigit():
+            raise ValueError("Phone number must contain only digits.")
         self.__phone = value
 
     @property
@@ -34,6 +36,8 @@ class Customer:
 
     @email.setter
     def email(self, value):
+        if "@" not in value:
+            raise ValueError("Invalid email format.")
         self.__email = value
 
     def to_dict(self):
