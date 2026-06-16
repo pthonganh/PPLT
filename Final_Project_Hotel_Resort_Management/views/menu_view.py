@@ -2,6 +2,7 @@ from models.standard_room import StandardRoom
 from models.vip_room import VIPRoom
 from models.villa_room import VillaRoom
 from models.customer import Customer
+from prettytable import PrettyTable
 
 
 class MenuView:
@@ -17,6 +18,149 @@ class MenuView:
         self.customer_service = customer_service
         self.booking_service = booking_service
         self.report_service = report_service
+
+    # ==================================
+    # PRETTY TABLE HELPERS
+    # ==================================
+
+    def print_rooms_table(self, rooms):
+
+        if len(rooms) == 0:
+            print("No rooms found.")
+            return
+
+        table = PrettyTable()
+
+        table.field_names = [
+            "Room ID",
+            "Type",
+            "Price",
+            "Capacity",
+            "Status",
+            "Services"
+        ]
+
+        table.align = "l"
+
+        for room in rooms:
+            table.add_row([
+                room.room_id,
+                room.get_room_type(),
+                room.price,
+                room.capacity,
+                room.status,
+                ", ".join(room.get_services())
+            ])
+
+        print(table)
+
+    def print_customers_table(self, customers):
+
+        if len(customers) == 0:
+            print("No customers found.")
+            return
+
+        table = PrettyTable()
+
+        table.field_names = [
+            "Customer ID",
+            "Name",
+            "Phone",
+            "Email"
+        ]
+
+        table.align = "l"
+
+        for customer in customers:
+            table.add_row([
+                customer.customer_id,
+                customer.name,
+                customer.phone,
+                customer.email
+            ])
+
+        print(table)
+
+    def print_bookings_table(self, bookings):
+
+        if len(bookings) == 0:
+            print("No bookings found.")
+            return
+
+        table = PrettyTable()
+
+        table.field_names = [
+            "Booking ID",
+            "Customer ID",
+            "Room ID",
+            "Check In",
+            "Check Out",
+            "Total Price"
+        ]
+
+        table.align = "l"
+
+        for booking in bookings:
+            table.add_row([
+                booking.booking_id,
+                booking.customer_id,
+                booking.room_id,
+                booking.check_in,
+                booking.check_out,
+                booking.total_price
+            ])
+
+        print(table)
+
+    def print_revenue_table(self, revenue_data):
+
+        if len(revenue_data) == 0:
+            print("No revenue data found.")
+            return
+
+        table = PrettyTable()
+
+        table.field_names = [
+            "Room Type",
+            "Revenue"
+        ]
+
+        table.align = "l"
+
+        for room_type, revenue in revenue_data.items():
+            table.add_row([
+                room_type,
+                revenue
+            ])
+
+        print(table)
+
+    def print_room_statistics_table(self, stats):
+
+        if len(stats) == 0:
+            print("No room statistics found.")
+            return
+
+        table = PrettyTable()
+
+        table.field_names = [
+            "Room Type",
+            "Total Rooms"
+        ]
+
+        table.align = "l"
+
+        for room_type, total in stats.items():
+            table.add_row([
+                room_type,
+                total
+            ])
+
+        print(table)
+
+    # ==================================
+    # MAIN MENU
+    # ==================================
 
     def run(self):
 
@@ -171,27 +315,14 @@ class MenuView:
 
         rooms = self.room_service.get_all_rooms()
 
-        if len(rooms) == 0:
-
-            print("No rooms found.")
-            return
-
         print("========== ROOM LIST ==========")
 
-        for room in rooms:
-
-            print(
-                f"{room.room_id} | "
-                f"{room.get_room_type()} | "
-                f"{room.price} | "
-                f"{room.capacity} | "
-                f"{room.status} | "
-                f"{', '.join(room.get_services())}"
-            )
+        self.print_rooms_table(rooms)
 
     def delete_room(self):
 
         try:
+
             room_id = input("Enter Room ID: ")
 
             if self.room_service.delete_room(room_id):
@@ -204,19 +335,25 @@ class MenuView:
 
     def update_room(self):
 
-        room_id = input("Room ID: ")
+        try:
 
-        price = float(input("New Price: "))
-        capacity = int(input("New Capacity: "))
+            room_id = input("Room ID: ")
 
-        if self.room_service.update_room(
-            room_id,
-            price,
-            capacity
-        ):
-            print("Updated successfully!")
-        else:
-            print("Room not found!")
+            price = float(input("New Price: "))
+            capacity = int(input("New Capacity: "))
+
+            if self.room_service.update_room(
+                room_id,
+                price,
+                capacity
+            ):
+                print("Updated successfully!")
+            else:
+                print("Room not found!")
+
+        except Exception as e:
+
+            print("Error:", e)
 
     def search_room(self):
 
@@ -226,58 +363,41 @@ class MenuView:
             keyword
         )
 
-        for room in rooms:
+        print("========== SEARCH ROOM RESULT ==========")
 
-            print(
-                f"{room.room_id} | "
-                f"{room.get_room_type()} | "
-                f"{room.price}"
-            )
+        self.print_rooms_table(rooms)
 
     def sort_room_asc(self):
 
         rooms = self.room_service.sort_by_price_ascending()
 
-        for room in rooms:
+        print("========== SORT ROOM BY PRICE ASC ==========")
 
-            print(
-                f"{room.room_id} | "
-                f"{room.price}"
-            )
+        self.print_rooms_table(rooms)
 
     def sort_room_desc(self):
 
         rooms = self.room_service.sort_by_price_descending()
 
-        for room in rooms:
+        print("========== SORT ROOM BY PRICE DESC ==========")
 
-            print(
-                f"{room.room_id} | "
-                f"{room.price}"
-            )
+        self.print_rooms_table(rooms)
 
     def sort_capacity_asc(self):
 
         rooms = self.room_service.sort_by_capacity_ascending()
 
-        for room in rooms:
+        print("========== SORT ROOM BY CAPACITY ASC ==========")
 
-            print(
-                f"{room.room_id} | "
-                f"{room.capacity}"
-            )
-
+        self.print_rooms_table(rooms)
 
     def sort_capacity_desc(self):
 
         rooms = self.room_service.sort_by_capacity_descending()
 
-        for room in rooms:
+        print("========== SORT ROOM BY CAPACITY DESC ==========")
 
-            print(
-                f"{room.room_id} | "
-                f"{room.capacity}"
-            )
+        self.print_rooms_table(rooms)
 
     # ==================================
     # CUSTOMER MENU
@@ -348,21 +468,9 @@ class MenuView:
 
         customers = self.customer_service.get_all_customers()
 
-        if len(customers) == 0:
-
-            print("No customers found.")
-            return
-
         print("========== CUSTOMER LIST ==========")
 
-        for customer in customers:
-
-            print(
-                f"{customer.customer_id} | "
-                f"{customer.name} | "
-                f"{customer.phone} | "
-                f"{customer.email}"
-            )
+        self.print_customers_table(customers)
 
     def delete_customer(self):
 
@@ -386,23 +494,29 @@ class MenuView:
 
     def update_customer(self):
 
-        customer_id = input(
-            "Customer ID: "
-        )
+        try:
 
-        name = input("New Name: ")
-        phone = input("New Phone: ")
-        email = input("New Email: ")
+            customer_id = input(
+                "Customer ID: "
+            )
 
-        if self.customer_service.update_customer(
-            customer_id,
-            name,
-            phone,
-            email
-        ):
-            print("Updated successfully!")
-        else:
-            print("Customer not found!")
+            name = input("New Name: ")
+            phone = input("New Phone: ")
+            email = input("New Email: ")
+
+            if self.customer_service.update_customer(
+                customer_id,
+                name,
+                phone,
+                email
+            ):
+                print("Updated successfully!")
+            else:
+                print("Customer not found!")
+
+        except Exception as e:
+
+            print("Error:", e)
 
     def search_customer(self):
 
@@ -417,15 +531,10 @@ class MenuView:
             )
         )
 
-        for customer in customers:
+        print("========== SEARCH CUSTOMER RESULT ==========")
 
-            print(
-                f"{customer.customer_id} | "
-                f"{customer.name} | "
-                f"{customer.phone}"
-            )
+        self.print_customers_table(customers)
 
-    
     # ==================================
     # BOOKING MENU
     # ==================================
@@ -515,23 +624,9 @@ class MenuView:
 
         bookings = self.booking_service.get_all_bookings()
 
-        if len(bookings) == 0:
-
-            print("No bookings found.")
-            return
-
         print("========== BOOKING LIST ==========")
 
-        for booking in bookings:
-
-            print(
-                f"{booking.booking_id} | "
-                f"{booking.customer_id} | "
-                f"{booking.room_id} | "
-                f"{booking.check_in} | "
-                f"{booking.check_out} | "
-                f"{booking.total_price}"
-            )
+        self.print_bookings_table(bookings)
 
     def cancel_booking(self):
 
@@ -590,7 +685,6 @@ class MenuView:
 
             print("Error:", e)
 
-
     def search_booking_by_customer(self):
 
         customer_id = input("Customer ID: ")
@@ -599,21 +693,9 @@ class MenuView:
             customer_id
         )
 
-        if len(bookings) == 0:
-            print("No bookings found.")
-            return
+        print("========== SEARCH BOOKING RESULT ==========")
 
-        for booking in bookings:
-
-            print(
-                f"{booking.booking_id} | "
-                f"{booking.customer_id} | "
-                f"{booking.room_id} | "
-                f"{booking.check_in} | "
-                f"{booking.check_out} | "
-                f"{booking.total_price}"
-            )
-
+        self.print_bookings_table(bookings)
 
     def sort_booking_by_price(self):
 
@@ -621,13 +703,10 @@ class MenuView:
             descending=True
         )
 
-        for booking in bookings:
+        print("========== SORT BOOKING BY PRICE DESC ==========")
 
-            print(
-                f"{booking.booking_id} | "
-                f"{booking.room_id} | "
-                f"{booking.total_price}"
-            )
+        self.print_bookings_table(bookings)
+
     # ==================================
     # REPORT MENU
     # ==================================
@@ -686,9 +765,21 @@ class MenuView:
             .get_total_revenue()
         )
 
-        print(
-            f"Total Revenue: {revenue}"
-        )
+        table = PrettyTable()
+
+        table.field_names = [
+            "Report",
+            "Value"
+        ]
+
+        table.align = "l"
+
+        table.add_row([
+            "Total Revenue",
+            revenue
+        ])
+
+        print(table)
 
     def show_revenue_by_room_type(self):
 
@@ -699,12 +790,7 @@ class MenuView:
 
         print("===== REVENUE BY ROOM TYPE =====")
 
-        for room_type, amount in revenue.items():
-
-            print(
-                f"{room_type}: {amount}"
-            )
-
+        self.print_revenue_table(revenue)
 
     def show_room_statistics(self):
 
@@ -715,12 +801,7 @@ class MenuView:
 
         print("===== ROOM STATISTICS =====")
 
-        for room_type, total in stats.items():
-
-            print(
-                f"{room_type}: {total} room(s)"
-            )
-
+        self.print_room_statistics_table(stats)
 
     def show_top_bookings(self):
 
@@ -731,14 +812,7 @@ class MenuView:
 
         print("===== TOP 3 BOOKINGS =====")
 
-        for booking in bookings:
-
-            print(
-                f"{booking.booking_id} | "
-                f"{booking.room_id} | "
-                f"{booking.total_price}"
-            )
-
+        self.print_bookings_table(bookings)
 
     def export_revenue_csv(self):
 
@@ -759,13 +833,7 @@ class MenuView:
             "===== AVAILABLE ROOMS ====="
         )
 
-        for room in rooms:
-
-            print(
-                f"{room.room_id} | "
-                f"{room.get_room_type()} | "
-                f"{room.price}"
-            )
+        self.print_rooms_table(rooms)
 
     def show_booked_rooms(self):
 
@@ -778,13 +846,7 @@ class MenuView:
             "===== BOOKED ROOMS ====="
         )
 
-        for room in rooms:
-
-            print(
-                f"{room.room_id} | "
-                f"{room.get_room_type()} | "
-                f"{room.price}"
-            )
+        self.print_rooms_table(rooms)
 
     def export_csv(self):
 
