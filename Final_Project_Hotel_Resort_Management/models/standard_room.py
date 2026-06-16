@@ -8,3 +8,6 @@ class StandardRoom(Room):
 
     def get_room_type(self):
         return "Standard"
+    
+    def get_services(self):
+        return ["WiFi", "TV"]

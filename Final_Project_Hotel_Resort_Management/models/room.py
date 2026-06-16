@@ -52,11 +52,16 @@ class Room(ABC):
     def get_room_type(self):
         pass
 
+    @abstractmethod
+    def get_services(self):
+        pass
+
     def to_dict(self):
         return {
             "room_id": self.room_id,
             "price": self.price,
             "capacity": self.capacity,
             "status": self.status,
-            "room_type": self.get_room_type()
+            "room_type": self.get_room_type(),
+            "services": self.get_services()
         }
