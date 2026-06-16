@@ -73,6 +73,8 @@ class MenuView:
             print("5. Search Room")
             print("6. Sort Price Asc")
             print("7. Sort Price Desc")
+            print("8. Sort Capacity Asc")
+            print("9. Sort Capacity Desc")
             print("0. Back")
 
             choice = input("Choose: ")
@@ -97,6 +99,12 @@ class MenuView:
 
             elif choice == "7":
                 self.sort_room_desc()
+
+            elif choice == "8":
+                self.sort_capacity_asc()
+
+            elif choice == "9":
+                self.sort_capacity_desc()
 
             elif choice == "0":
                 break
@@ -177,20 +185,22 @@ class MenuView:
                 f"{room.get_room_type()} | "
                 f"{room.price} | "
                 f"{room.capacity} | "
-                f"{room.status}"
+                f"{room.status} | "
+                f"{', '.join(room.get_services())}"
             )
 
     def delete_room(self):
 
-        room_id = input("Enter Room ID: ")
+        try:
+            room_id = input("Enter Room ID: ")
 
-        if self.room_service.delete_room(room_id):
+            if self.room_service.delete_room(room_id):
+                print("Deleted successfully!")
+            else:
+                print("Room not found!")
 
-            print("Deleted successfully!")
-
-        else:
-
-            print("Room not found!")
+        except Exception as e:
+            print("Error:", e)
 
     def update_room(self):
 
@@ -245,7 +255,31 @@ class MenuView:
                 f"{room.room_id} | "
                 f"{room.price}"
             )
-        # ==================================
+
+    def sort_capacity_asc(self):
+
+        rooms = self.room_service.sort_by_capacity_ascending()
+
+        for room in rooms:
+
+            print(
+                f"{room.room_id} | "
+                f"{room.capacity}"
+            )
+
+
+    def sort_capacity_desc(self):
+
+        rooms = self.room_service.sort_by_capacity_descending()
+
+        for room in rooms:
+
+            print(
+                f"{room.room_id} | "
+                f"{room.capacity}"
+            )
+
+    # ==================================
     # CUSTOMER MENU
     # ==================================
 
@@ -403,7 +437,10 @@ class MenuView:
             print("========== BOOKING MANAGEMENT ==========")
             print("1. Create Booking")
             print("2. View Bookings")
-            print("3. Cancel Booking")
+            print("3. Update Booking")
+            print("4. Cancel Booking")
+            print("5. Search Booking By Customer")
+            print("6. Sort Booking By Price")
             print("0. Back")
 
             choice = input("Choose: ")
@@ -415,7 +452,16 @@ class MenuView:
                 self.view_bookings()
 
             elif choice == "3":
+                self.update_booking()
+
+            elif choice == "4":
                 self.cancel_booking()
+
+            elif choice == "5":
+                self.search_booking_by_customer()
+
+            elif choice == "6":
+                self.sort_booking_by_price()
 
             elif choice == "0":
                 break
@@ -507,6 +553,81 @@ class MenuView:
                 "Booking not found!"
             )
 
+    def update_booking(self):
+
+        try:
+
+            booking_id = input("Booking ID: ")
+
+            customer_id = input(
+                "New Customer ID (leave blank to keep old): "
+            )
+
+            room_id = input(
+                "New Room ID (leave blank to keep old): "
+            )
+
+            check_in = input(
+                "New Check In (YYYY-MM-DD, leave blank to keep old): "
+            )
+
+            check_out = input(
+                "New Check Out (YYYY-MM-DD, leave blank to keep old): "
+            )
+
+            booking = self.booking_service.update_booking(
+                booking_id,
+                customer_id if customer_id != "" else None,
+                room_id if room_id != "" else None,
+                check_in if check_in != "" else None,
+                check_out if check_out != "" else None
+            )
+
+            print("Booking updated successfully!")
+            print(f"Total Price: {booking.total_price}")
+
+        except Exception as e:
+
+            print("Error:", e)
+
+
+    def search_booking_by_customer(self):
+
+        customer_id = input("Customer ID: ")
+
+        bookings = self.booking_service.find_bookings_by_customer_id(
+            customer_id
+        )
+
+        if len(bookings) == 0:
+            print("No bookings found.")
+            return
+
+        for booking in bookings:
+
+            print(
+                f"{booking.booking_id} | "
+                f"{booking.customer_id} | "
+                f"{booking.room_id} | "
+                f"{booking.check_in} | "
+                f"{booking.check_out} | "
+                f"{booking.total_price}"
+            )
+
+
+    def sort_booking_by_price(self):
+
+        bookings = self.booking_service.sort_bookings_by_total_price(
+            descending=True
+        )
+
+        for booking in bookings:
+
+            print(
+                f"{booking.booking_id} | "
+                f"{booking.room_id} | "
+                f"{booking.total_price}"
+            )
     # ==================================
     # REPORT MENU
     # ==================================
@@ -517,9 +638,13 @@ class MenuView:
 
             print("========== REPORTS ==========")
             print("1. Total Revenue")
-            print("2. Available Rooms")
-            print("3. Booked Rooms")
-            print("4. Export Booking CSV")
+            print("2. Revenue By Room Type")
+            print("3. Available Rooms")
+            print("4. Booked Rooms")
+            print("5. Room Statistics")
+            print("6. Top 3 Bookings")
+            print("7. Export Booking CSV")
+            print("8. Export Revenue CSV")
             print("0. Back")
 
             choice = input("Choose: ")
@@ -528,13 +653,25 @@ class MenuView:
                 self.show_revenue()
 
             elif choice == "2":
-                self.show_available_rooms()
+                self.show_revenue_by_room_type()
 
             elif choice == "3":
-                self.show_booked_rooms()
+                self.show_available_rooms()
 
             elif choice == "4":
+                self.show_booked_rooms()
+
+            elif choice == "5":
+                self.show_room_statistics()
+
+            elif choice == "6":
+                self.show_top_bookings()
+
+            elif choice == "7":
                 self.export_csv()
+
+            elif choice == "8":
+                self.export_revenue_csv()
 
             elif choice == "0":
                 break
@@ -551,6 +688,64 @@ class MenuView:
 
         print(
             f"Total Revenue: {revenue}"
+        )
+
+    def show_revenue_by_room_type(self):
+
+        revenue = (
+            self.report_service
+            .get_revenue_by_room_type()
+        )
+
+        print("===== REVENUE BY ROOM TYPE =====")
+
+        for room_type, amount in revenue.items():
+
+            print(
+                f"{room_type}: {amount}"
+            )
+
+
+    def show_room_statistics(self):
+
+        stats = (
+            self.report_service
+            .get_room_statistics()
+        )
+
+        print("===== ROOM STATISTICS =====")
+
+        for room_type, total in stats.items():
+
+            print(
+                f"{room_type}: {total} room(s)"
+            )
+
+
+    def show_top_bookings(self):
+
+        bookings = (
+            self.report_service
+            .get_top_bookings()
+        )
+
+        print("===== TOP 3 BOOKINGS =====")
+
+        for booking in bookings:
+
+            print(
+                f"{booking.booking_id} | "
+                f"{booking.room_id} | "
+                f"{booking.total_price}"
+            )
+
+
+    def export_revenue_csv(self):
+
+        self.report_service.export_revenue_report_csv()
+
+        print(
+            "revenue_report.csv exported successfully!"
         )
 
     def show_available_rooms(self):
