@@ -1,1 +1,8 @@
-[]
+[
+    {
+        "customer_id": "C001",
+        "name": "Hồng Anh",
+        "phone": "0906578414",
+        "email": "ptha@gmail.com"
+    }
+]

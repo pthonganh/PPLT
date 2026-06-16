@@ -1,9 +1,13 @@
 [
     {
-        "room_id": "01",
-        "price": 200.0,
+        "room_id": "R001",
+        "price": 500.0,
         "capacity": 2,
-        "status": "Available",
-        "room_type": "VIP"
+        "status": "Booked",
+        "room_type": "Standard",
+        "services": [
+            "WiFi",
+            "TV"
+        ]
     }
 ]

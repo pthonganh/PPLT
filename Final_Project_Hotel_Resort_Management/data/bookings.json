@@ -1,1 +1,10 @@
-[]
+[
+    {
+        "booking_id": "B001",
+        "customer_id": "C001",
+        "room_id": "R001",
+        "check_in": "2026-06-16",
+        "check_out": "2026-06-18",
+        "total_price": 1000.0
+    }
+]
