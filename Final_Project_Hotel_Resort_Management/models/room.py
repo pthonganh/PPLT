@@ -2,12 +2,13 @@ from abc import ABC, abstractmethod
 
 
 class Room(ABC):
+    VALID_STATUSES = ["Available", "Booked"]
 
-    def __init__(self, room_id, price, capacity):
+    def __init__(self, room_id, price, capacity, status="Available"):
         self.__room_id = room_id
-        self.__price = price
-        self.__capacity = capacity
-        self.__status = "Available"
+        self.price = price
+        self.capacity = capacity
+        self.status = status
 
     @property
     def room_id(self):
@@ -39,6 +40,8 @@ class Room(ABC):
 
     @status.setter
     def status(self, value):
+        if value not in self.VALID_STATUSES:
+            raise ValueError("Status must be Available or Booked.")
         self.__status = value
 
     @abstractmethod
