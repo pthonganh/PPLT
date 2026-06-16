@@ -21,8 +21,6 @@ class GUIView:
         self.window.geometry("1200x700")
         self.window.configure(bg="#f4f7fb")
 
-        self.current_title = tk.StringVar(value="Dashboard")
-
     def run(self):
         self.create_layout()
         self.show_dashboard()
@@ -34,20 +32,13 @@ class GUIView:
             bg="#1f4e79",
             width=230
         )
-        self.sidebar.pack(
-            side="left",
-            fill="y"
-        )
+        self.sidebar.pack(side="left", fill="y")
 
         self.main_frame = tk.Frame(
             self.window,
             bg="#f4f7fb"
         )
-        self.main_frame.pack(
-            side="right",
-            fill="both",
-            expand=True
-        )
+        self.main_frame.pack(side="right", fill="both", expand=True)
 
         logo = tk.Label(
             self.sidebar,
@@ -64,12 +55,15 @@ class GUIView:
         self.add_sidebar_button("View Bookings", self.show_bookings)
         self.add_sidebar_button("Revenue Report", self.show_revenue_by_room_type)
         self.add_sidebar_button("Export Booking CSV", self.export_booking_csv)
+        self.add_sidebar_button("Export Revenue CSV", self.export_revenue_csv)
 
         exit_button = tk.Button(
             self.sidebar,
             text="Exit",
             bg="#d9534f",
             fg="white",
+            activebackground="#c9302c",
+            activeforeground="white",
             font=("Arial", 12, "bold"),
             relief="flat",
             command=self.window.destroy
@@ -85,11 +79,7 @@ class GUIView:
             self.main_frame,
             bg="#f4f7fb"
         )
-        header.pack(
-            fill="x",
-            padx=30,
-            pady=20
-        )
+        header.pack(fill="x", padx=30, pady=20)
 
         tk.Label(
             header,
@@ -193,6 +183,26 @@ class GUIView:
         self.create_card(card_frame, "Total Bookings", total_bookings, "#f97316")
         self.create_card(card_frame, "Total Revenue", total_revenue, "#9333ea")
 
+        button_frame = tk.Frame(
+            self.content,
+            bg="#f4f7fb"
+        )
+        button_frame.pack(pady=20)
+
+        tk.Button(
+            button_frame,
+            text="Refresh Dashboard",
+            bg="#2563eb",
+            fg="white",
+            activebackground="#1d4ed8",
+            activeforeground="white",
+            font=("Arial", 11, "bold"),
+            relief="flat",
+            padx=20,
+            pady=8,
+            command=self.show_dashboard
+        ).pack()
+
         info = tk.Label(
             self.content,
             text="Welcome to Hotel Resort Management System",
@@ -200,7 +210,7 @@ class GUIView:
             fg="#374151",
             font=("Arial", 14)
         )
-        info.pack(pady=40)
+        info.pack(pady=20)
 
     def create_table(self, columns):
         table_frame = tk.Frame(
@@ -225,11 +235,26 @@ class GUIView:
             tree.heading(column, text=column)
             tree.column(column, width=150, anchor="center")
 
+        scrollbar = ttk.Scrollbar(
+            table_frame,
+            orient="vertical",
+            command=tree.yview
+        )
+        tree.configure(yscrollcommand=scrollbar.set)
+
         tree.pack(
+            side="left",
             fill="both",
             expand=True,
-            padx=10,
+            padx=(10, 0),
             pady=10
+        )
+
+        scrollbar.pack(
+            side="right",
+            fill="y",
+            pady=10,
+            padx=(0, 10)
         )
 
         return tree
@@ -353,6 +378,14 @@ class GUIView:
         self.report_service.export_bookings_csv()
 
         messagebox.showinfo(
-            "Export CSV",
-            "booking_report.csv exported successfully!"
+            "Export Success",
+            "Booking report has been exported successfully."
+        )
+
+    def export_revenue_csv(self):
+        self.report_service.export_revenue_report_csv()
+
+        messagebox.showinfo(
+            "Export Success",
+            "Revenue report has been exported successfully."
         )
