@@ -20,6 +20,10 @@ class CustomerService:
 
         self.customers.append(customer)
 
+        self.save_data()
+
+        return customer
+
     # =========================
     # READ
     # =========================
@@ -51,6 +55,17 @@ class CustomerService:
 
         return result
 
+    def search_customer_by_phone(self, phone):
+
+        result = []
+
+        for customer in self.customers:
+
+            if phone in customer.phone:
+                result.append(customer)
+
+        return result
+
     # =========================
     # UPDATE
     # =========================
@@ -58,9 +73,9 @@ class CustomerService:
     def update_customer(
         self,
         customer_id,
-        new_name,
-        new_phone,
-        new_email
+        new_name=None,
+        new_phone=None,
+        new_email=None
     ):
 
         customer = self.find_customer_by_id(customer_id)
@@ -68,9 +83,16 @@ class CustomerService:
         if customer is None:
             return False
 
-        customer.name = new_name
-        customer.phone = new_phone
-        customer.email = new_email
+        if new_name is not None:
+            customer.name = new_name
+
+        if new_phone is not None:
+            customer.phone = new_phone
+
+        if new_email is not None:
+            customer.email = new_email
+
+        self.save_data()
 
         return True
 
@@ -87,6 +109,8 @@ class CustomerService:
 
         self.customers.remove(customer)
 
+        self.save_data()
+
         return True
 
     # =========================
@@ -99,6 +123,22 @@ class CustomerService:
             self.customers,
             key=lambda customer: customer.name.lower()
         )
+
+    def sort_by_name_descending(self):
+
+        return sorted(
+            self.customers,
+            key=lambda customer: customer.name.lower(),
+            reverse=True
+        )
+
+    # =========================
+    # STATISTICS
+    # =========================
+
+    def count_customers(self):
+
+        return len(self.customers)
 
     # =========================
     # SAVE JSON
@@ -158,4 +198,3 @@ class CustomerService:
         except json.JSONDecodeError:
 
             self.customers = []
-            
